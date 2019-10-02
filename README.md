@@ -15,11 +15,7 @@ Tools for rose development.
 
 ## Run Container:
 
-#### Start Interactive Bash:
-
-`sudo docker run -it rose-dev:0.1 /bin/bash`
-
-## Arguments:
+### Start Interactive Bash:
 
 #### Mount Directory:
 
@@ -33,7 +29,7 @@ The extra parameter is applied specifically for gdb running inside Docker contai
 
 #### Enter Existing Docker Container:
 
-`sudo docker exec -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined rosedev /bin/bash`
+`sudo docker exec -it rosedev /bin/bash`
 
 #### Build:
 
