@@ -39,7 +39,7 @@ The extra parameter is applied specifically for gdb running inside Docker contai
 # Enter ROSE build tree folder.
 ../rose_src/configure --prefix=$ROSE_PATH --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --enable-projects-directory --disable-tests-directory --disable-tutorial-directory --enable-edg_version=5.0 --with-gomp_omp_runtime_library=/usr/lib/gcc/x86_64-linux-gnu/5
 make core -j6
-
+make install-core
 ```
 
 #### Compile and install ompparser library:
@@ -54,7 +54,7 @@ cmake -DCMAKE_INSTALL_PREFIX=../../ompparser_install ..
 
 ```bash
 export LD_LIBRARY_PATH=/rose/ompparser-install/lib:$LD_LIBRARY_PATH
-../rose_src/configure --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --disable-tests-directory --disable-tutorial-directory --disable-projects-directory --enable-edg_version=5.0 --with-gomp_omp_runtime_library=/usr/lib/gcc/x86_64-linux-gnu/5 --with-ompparser=/rose/ompparser_install
+../rose_src/configure --prefix=$ROSE_PATH --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --disable-tests-directory --disable-tutorial-directory --disable-projects-directory --enable-edg_version=5.0 --with-gomp_omp_runtime_library=/usr/lib/gcc/x86_64-linux-gnu/5 --with-ompparser=/rose/ompparser_install
 ```
 
 ## Troubleshooting:
