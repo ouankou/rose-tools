@@ -6,7 +6,7 @@ Tools for rose development.
 ## Installation
 
 
-## Build Image:
+## Build ROSE Image:
 
 #### With Tags:
 
@@ -31,7 +31,7 @@ The extra parameter is applied specifically for gdb running inside Docker contai
 
 `sudo docker exec -it rosedev /bin/bash`
 
-#### Build:
+#### Build without ompparser library:
 
 ```bash
 # Enter ROSE source code folder.
