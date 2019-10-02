@@ -34,24 +34,27 @@ The extra parameter is applied specifically for gdb running inside Docker contai
 #### Build:
 
 ```bash
-
+# Enter ROSE source code folder.
 ./build
-configure --prefix=$ROSE_PATH --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --enable-projects-directory --disable-tests-directory --disable-tutorial-directory --enable-edg_version=5.0 --with-gomp_omp_runtime_library=/usr/lib/gcc/x86_64-linux-gnu/5
-make -j6
+# Enter ROSE build tree folder.
+../rose_src/configure --prefix=$ROSE_PATH --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --enable-projects-directory --disable-tests-directory --disable-tutorial-directory --enable-edg_version=5.0 --with-gomp_omp_runtime_library=/usr/lib/gcc/x86_64-linux-gnu/5
+make core -j6
 
 ```
 
 #### Compile and install ompparser library:
 
+The ompparser library should be mounted inside ROSE docker as well.
+
 ```bash
-cmake -DCMAKE_INSTALL_PREFIX=../../ompparser-install ..
+cmake -DCMAKE_INSTALL_PREFIX=../../ompparser_install ..
 ```
 
 #### Enable ompparser library in ROSE:
 
 ```bash
-export LD_LIBRARY_PATH=/home/anjiaw/Projects/ompparser-install/lib:$LD_LIBRARY_PATH
-../rose_src/configure --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --disable-tests-directory --disable-tutorial-directory --disable-projects-directory --with-ompparser=/home/anjiaw/Projects/ompparser-install
+export LD_LIBRARY_PATH=/rose/ompparser-install/lib:$LD_LIBRARY_PATH
+../rose_src/configure --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --disable-tests-directory --disable-tutorial-directory --disable-projects-directory --enable-edg_version=5.0 --with-gomp_omp_runtime_library=/usr/lib/gcc/x86_64-linux-gnu/5 --with-ompparser=/rose/ompparser_install
 ```
 
 ## Troubleshooting:
