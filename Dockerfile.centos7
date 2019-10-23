@@ -1,1 +1,12 @@
-FROM centos:centos8
+FROM centos:centos7
+
+RUN dnf -y update && \
+    dnf -y install \
+        bison \
+        clang \
+        cmake \
+        flex \
+        gcc \
+        git \
+        make
+ 

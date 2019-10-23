@@ -7,6 +7,6 @@ RUN dnf -y update && \
         cmake \
         flex \
         gcc \
-        g++ \
-        dot 
+        git \
+        make
  
