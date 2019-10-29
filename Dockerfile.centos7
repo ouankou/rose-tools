@@ -1,7 +1,7 @@
 FROM centos:centos7
 
-RUN dnf -y update && \
-    dnf -y install \
+RUN yum -y update && \
+    yum -y install \
         bison \
         clang \
         cmake \
