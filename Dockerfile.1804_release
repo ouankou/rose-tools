@@ -53,8 +53,8 @@ RUN apt-get update && \
         zip \
         zlib1g \
         zlib1g-dev && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /var/cache/*
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/*
 
 # Setup environment
 ENV ROSE_SRC /rose/rose_src
@@ -74,7 +74,7 @@ RUN mkdir -p $ROSE_PATH && \
     cd $ROSE_SRC && \
     ./build && \
     cd $ROSE_BUILD && \
-    $ROSE_SRC/configure --prefix=$ROSE_PATH --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --disable-projects-directory --disable-tests-directory --disable-tutorial-directory --enable-edg_version=5.0
+    $ROSE_SRC/configure --prefix=$ROSE_PATH --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --disable-projects-directory --disable-tests-directory --disable-tutorial-directory
 # Compile ROSE
 RUN cd $ROSE_BUILD && \
     make core -j4 && \
