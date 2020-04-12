@@ -74,12 +74,12 @@ RUN mkdir -p $ROSE_PATH && \
     cd $ROSE_SRC && \
     ./build && \
     cd $ROSE_BUILD && \
-    $ROSE_SRC/configure --prefix=$ROSE_PATH --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --disable-projects-directory --disable-tests-directory --disable-tutorial-directory
+    $ROSE_SRC/configure --prefix=$ROSE_PATH --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --disable-projects-directory --disable-tests-directory --disable-tutorial-directory --with-gomp_omp_runtime_library=/usr/lib/gcc/x86_64-linux-gnu/7
 # Compile ROSE
 RUN cd $ROSE_BUILD && \
-    make core -j4 && \
-    make install-core && \
-    make install-tools
+    make core -j2 && \
+    make install-core -j2 && \
+    make install-tools -j2
 
 # Username doesn't need to be defined. The host user has to be passed into Docker for correct file permissions.
 
