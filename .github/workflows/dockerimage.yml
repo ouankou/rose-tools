@@ -1,0 +1,25 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+    paths: 
+      - 'Dockerfile.1804_release'
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile.1804_release --tag rose
+
+    - name: Push the Docker image
+      run: |
+        docker login -u ouankou -p {{ secrets.DOCKERHUB }}
+        docker tag rose ouankou/rose:18.04-release
+        docker push ouankou/rose:18.04-release
