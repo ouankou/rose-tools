@@ -24,39 +24,20 @@ RUN apt-get update && \
         bison \
         build-essential \
         cmake \
-        cpufrequtils \
         curl \
-        device-tree-compiler \
-        dkms \
-        doxygen \
         flex \
-        gawk \
         gcc-multilib \
         gdb \
         gfortran \
         ghostscript \
         git \
-        gperf \
         graphviz \
+        iputils-ping \
         libboost-all-dev \
-        libgmp-dev \
-        libhpdf-dev \
-        libmpc-dev \
-        libmpfr-dev \
         libomp-dev \
         libtool \
-        libxml2-dev \
-        patchutils \
-        perl-doc \
-        python3-dev \
-        sqlite \
-        texinfo \
-        unzip \
         vim \
-        wget \
-        zip \
-        zlib1g \
-        zlib1g-dev && \
+        wget && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/cache/*
 
