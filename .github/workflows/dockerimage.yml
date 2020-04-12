@@ -3,8 +3,8 @@ name: Docker Image CI
 on:
   push:
     branches: [ master ]
-    paths: 
-      - 'Dockerfile.1804_release'
+    #paths: 
+      #- 'Dockerfile.1804_release'
 
 jobs:
 
@@ -14,10 +14,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
-    - name: Build the Docker image
+    - name: Check
       run: |
         df -h
+    - name: Build the Docker image
+      run: |
         docker build . --file Dockerfile.1804_release --tag rose
 
     - name: Push the Docker image
