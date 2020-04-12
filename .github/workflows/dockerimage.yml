@@ -16,7 +16,9 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile.1804_release --tag rose
+      run: |
+        df -h
+        docker build . --file Dockerfile.1804_release --tag rose
 
     - name: Push the Docker image
       run: |
