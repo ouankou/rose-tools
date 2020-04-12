@@ -4,6 +4,10 @@
 # Pull base image.
 FROM ubuntu:18.04
 
+# Adding user rose
+RUN groupadd -g 9999 rose && \
+    useradd -r -u 9999 -g rose -m -d /home/rose rose
+
 # Install packages.
 RUN apt-get update && \
     apt-get install -y \
@@ -56,10 +60,12 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/cache/*
 
+USER rose
+
 # Setup environment
-ENV ROSE_SRC /rose/rose_src
-ENV ROSE_PATH /rose/rose_install
-ENV ROSE_BUILD /rose/rose_build
+ENV ROSE_SRC /home/rose/rose_src
+ENV ROSE_PATH /home/rose/rose_install
+ENV ROSE_BUILD /home/rose/rose_build
 ENV PATH $ROSE_PATH/bin:$PATH
 ENV LD_LIBRARY_PATH $ROSE_PATH/lib:$LD_LIBRARY_PATH
 ENV LIBRARY_PATH $ROSE_PATH/lib:$LIBRARY_PATH
@@ -81,10 +87,10 @@ RUN cd $ROSE_BUILD && \
     make install-core -j2 && \
     make install-tools -j2
 
-# Username doesn't need to be defined. The host user has to be passed into Docker for correct file permissions.
+# If the files on the host need to be modified, the host user has to be passed into Docker for correct file permissions.
 
 # Define working directory.
-WORKDIR /rose
+WORKDIR /home/rose
 
 # Define default command.
 CMD ["bash"]
