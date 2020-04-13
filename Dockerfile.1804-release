@@ -1,0 +1,13 @@
+
+# Environment for ROSE compiler development.
+
+# Pull base image.
+FROM ouankou/rose:18.04-release-noinstall
+
+# Compile ROSE
+RUN cd $ROSE_BUILD && \
+    make install-core && \
+    make install-tools
+
+# Define default command.
+CMD ["bash"]
