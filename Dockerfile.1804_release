@@ -65,8 +65,7 @@ RUN mkdir -p $ROSE_PATH && \
     $ROSE_SRC/configure --prefix=$ROSE_PATH --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --disable-projects-directory --disable-tests-directory --disable-tutorial-directory --with-gomp_omp_runtime_library=/usr/lib/gcc/x86_64-linux-gnu/7
 # Compile ROSE
 RUN cd $ROSE_BUILD && \
-    make core -j2 && \
-    make install-core -j2
+    make core -j2
 
 # If the files on the host need to be modified, the host user has to be passed into Docker for correct file permissions.
 
