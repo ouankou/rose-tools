@@ -3,8 +3,8 @@ name: Docker Image CI
 on:
   push:
     branches: [ master ]
-    #paths: 
-      #- 'Dockerfile.1804_release'
+    paths: 
+      - 'Dockerfile.1804-release-noinstall'
 
 jobs:
 
@@ -15,13 +15,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    #- name: Build the Docker image
-    #  run: |
-    #    docker build . --file Dockerfile.1804_release --tag rose
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile.1804-release-noinstall --tag rose
 
     - name: Push the Docker image
       run: |
-        echo ${{ secrets.DOCKERHUB }}
         echo ${{ secrets.DOCKERHUB }} | docker login -u ouankou --password-stdin
-        docker tag rose ouankou/rose:18.04-release
-        docker push ouankou/rose:18.04-release
+        docker tag rose ouankou/rose:18.04-release-noinstall
+        docker push ouankou/rose:18.04-release-noinstall
