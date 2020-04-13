@@ -14,15 +14,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Check
-      run: |
-        df -h
+
     - name: Build the Docker image
       run: |
         docker build . --file Dockerfile.1804_release --tag rose
 
     - name: Push the Docker image
       run: |
-        docker login -u ouankou -p {{ secrets.DOCKERHUB }}
+        echo {{ secrets.DOCKERHUB }} | docker login -u ouankou --password-stdin
         docker tag rose ouankou/rose:18.04-release
         docker push ouankou/rose:18.04-release
