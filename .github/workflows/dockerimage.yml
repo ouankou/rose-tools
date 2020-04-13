@@ -21,6 +21,6 @@ jobs:
 
     - name: Push the Docker image
       run: |
-        echo {{ secrets.DOCKERHUB }} | docker login -u ouankou --password-stdin
+        echo "{{ secrets.DOCKERHUB }}" | docker login -u ouankou --password-stdin
         docker tag rose ouankou/rose:18.04-release
         docker push ouankou/rose:18.04-release
