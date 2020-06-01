@@ -1,0 +1,51 @@
+FROM alpine:3.8
+
+
+#Initial Setup ------------------------------------------------------------------
+RUN apk add --no-cache \
+        autoconf \
+        automake \
+        bison \
+        boost-dev \
+        bsd-compat-headers \
+        build-base \
+        flex \
+        ghostscript \
+        g++ \
+        gcc \
+        git \
+        iputils \
+        libtool \
+        make \
+        musl-dev \
+        tar \
+        vim \
+        wget
+
+ENV ROSE_HOME /rose
+ENV NUM_PROCESSORS 8
+
+#Download ROSE ------------------------------------------------------------------
+RUN mkdir -p ${ROSE_HOME}
+RUN git clone -b release https://github.com/rose-compiler/rose.git ${ROSE_HOME}/src
+RUN cd ${ROSE_HOME}/src && ./build
+
+#Configure ----------------------------------------------------------------------
+RUN mkdir ${ROSE_HOME}/build
+RUN cd $ROSE_HOME/build
+RUN ${ROSE_HOME}/src/configure --prefix=${ROSE_HOME}/install \
+                  --enable-languages=c,c++ \
+                  --disable-tutorial-directory --disable-projects-directory \
+                  --with-boost=/usr --with-boost-libdir=/usr/lib/
+
+RUN apk add dev86
+
+#RUN ln -s /usr/include/termios.h /usr/include/termio.h
+
+#Compile ------------------------------------------------------------------------
+#RUN make core -j${NUM_PROCESSORS}
+#RUN make install-core -j${NUM_PROCESSORS}
+#RUN make check-core -j${NUM_PROCESSORS}
+
+#Optional to install tools ------------------------------------------------------
+#RUN make install-tools -j${NUM_PROCESSORS}

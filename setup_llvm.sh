@@ -13,7 +13,7 @@ mkdir -p $LLVM_BUILD
 cd $LLVM_SRC
 git clone -b release/9.x https://github.com/llvm/llvm-project .
 cd $LLVM_BUILD
-cmake -G Ninja -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;openmp" -DCLANG_BUILD_EXAMPLES=1 $LLVM_SRC/llvm
+cmake -G Ninja  -DLLVM_USE_LINKER=gold  -DLLVM_ENABLE_RTTI=ON -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;openmp;libcxx;libcxxabi" $LLVM_SRC/llvm
 ninja install -j6 -l6
 
 export PATH=$LLVM_PATH/bin:$PATH

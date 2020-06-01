@@ -1,5 +1,5 @@
 
-# Environment for ROSE compiler development.
+# Environment for ROSE compiler with Clang frontend.
 
 # Pull base image.
 FROM ubuntu:18.04
@@ -13,63 +13,44 @@ RUN \
         software-properties-common && \
     apt-get install -y openjdk-8-jdk && \
     apt-get install -y \ 
-        autoconf \
         automake \
-        autotools-dev \
-        bc \
-        binutils \
         bison \
         build-essential \
         cmake \
-        cpufrequtils \
         curl \
-        device-tree-compiler \
-        dkms \
-        doxygen \
         flex \
-        gawk \
-        gcc-multilib \
+        g++ \
+        gcc \
         gdb \
         gfortran \
         ghostscript \
         git \
-        gperf \
         graphviz \
+        iputils-ping \
         libboost-all-dev \
-        libgmp-dev \
-        libhpdf-dev \
-        libmpc-dev \
-        libmpfr-dev \
-        libomp-dev \
         libtool \
-        libxml2-dev \
         ninja-build \
-        patchutils \
-        perl-doc \
-        python3-dev \
-        sqlite \
-        texinfo \
-        unzip \
         vim \
-        wget \
-        zip \
-        zlib1g \
-        zlib1g-dev && \
+        wget && \
   rm -rf /var/lib/apt/lists/* && \
   rm -rf /var/cache/*
 
+# Define commonly used JAVA_HOME variable
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV LD_LIBRARY_PATH $JAVA_HOME/jre/lib/amd64/server:/usr/lib/x86_64-linux-gnu
+
 # Setup environment
-ENV ROSE_SRC /rose/rose_src
-ENV ROSE_PATH /rose/rose_install
-ENV ROSE_BUILD /rose/rose_build
+ENV ROSE_SRC /opt/rose/rose_src
+ENV ROSE_PATH /opt/rose/rose_install
+ENV ROSE_BUILD /opt/rose/rose_build
 ENV PATH $ROSE_PATH/bin:$PATH
 ENV LD_LIBRARY_PATH $ROSE_PATH/lib:$LD_LIBRARY_PATH
 ENV LIBRARY_PATH $ROSE_PATH/lib:$LIBRARY_PATH
 
 # Install LLVM
-ENV LLVM_SRC /llvm/llvm_src
-ENV LLVM_PATH /llvm/llvm_install
-ENV LLVM_BUILD /llvm/llvm_build
+ENV LLVM_SRC /opt/llvm/llvm_src
+ENV LLVM_PATH /opt/llvm/llvm_install
+ENV LLVM_BUILD /opt/llvm/llvm_build
 
 RUN mkdir -p $LLVM_SRC && \
     mkdir -p $LLVM_PATH && \
@@ -77,7 +58,7 @@ RUN mkdir -p $LLVM_SRC && \
     cd $LLVM_SRC && \
     git clone -b release/9.x https://github.com/llvm/llvm-project . && \
     cd $LLVM_BUILD && \
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;openmp" -DCLANG_BUILD_EXAMPLES=1 $LLVM_SRC/llvm && \
+    cmake -G Ninja -DLLVM_USE_LINKER=gold -DLLVM_ENABLE_RTTI=ON -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;openmp;libcxx;libcxxabi" $LLVM_SRC/llvm && \
     ninja install -j2 -l2
 
 ENV PATH $LLVM_PATH/bin:$PATH
@@ -90,11 +71,7 @@ ENV C_INCLUDE_PATH $LLVM_PATH/include:$C_INCLUDE_PATH
 ENV CPLUS_INCLUDE_PATH $LLVM_PATH/include:CPLUS_INCLUDE_PATH
 
 # Define working directory.
-WORKDIR /rose
-
-# Define commonly used JAVA_HOME variable
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
-ENV LD_LIBRARY_PATH $JAVA_HOME/jre/lib/amd64/server:/usr/lib/x86_64-linux-gnu
+WORKDIR /opt/rose
 
 # Username doesn't need to be defined. The host user has to be passed into Docker for correct file permissions.
 
