@@ -13,11 +13,7 @@ RUN \
         software-properties-common && \
     apt-get install -y openjdk-8-jdk && \
     apt-get install -y \ 
-        autoconf \
         automake \
-        autotools-dev \
-        bc \
-        binutils \
         bison \
         build-essential \
         cmake \
@@ -25,7 +21,6 @@ RUN \
         flex \
         g++ \
         gcc \
-        gcc-multilib \
         gdb \
         gfortran \
         ghostscript \
@@ -33,14 +28,12 @@ RUN \
         graphviz \
         iputils-ping \
         libboost-all-dev \
-        libtinfo-dev \
         libtool \
         ninja-build \
         vim \
-        wget \
-        zlib1g-dev && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /var/cache/*
+        wget && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/*
 
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
@@ -79,6 +72,14 @@ ENV CPLUS_INCLUDE_PATH $LLVM_PATH/include:CPLUS_INCLUDE_PATH
 
 # Define working directory.
 WORKDIR /opt/rose
+
+RUN apt-get update && \
+    apt-get install -y \
+        gcc-multilib \
+        libtinfo-dev \
+        zlib1g-dev && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/*
 
 RUN mkdir -p $ROSE_BUILD && \
     git clone -b develop https://github.com/rose-compiler/rose.git $ROSE_SRC && \
