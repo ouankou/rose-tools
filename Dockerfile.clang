@@ -21,6 +21,7 @@ RUN \
         flex \
         g++ \
         gcc \
+        gcc-multilib \
         gdb \
         gfortran \
         ghostscript \
@@ -28,10 +29,12 @@ RUN \
         graphviz \
         iputils-ping \
         libboost-all-dev \
+        libtinfo-dev \
         libtool \
         ninja-build \
         vim \
-        wget && \
+        wget \
+        zlib1g-dev && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/cache/*
 
@@ -73,14 +76,7 @@ ENV CPLUS_INCLUDE_PATH $LLVM_PATH/include:CPLUS_INCLUDE_PATH
 # Define working directory.
 WORKDIR /opt/rose
 
-RUN apt-get update && \
-    apt-get install -y \
-        gcc-multilib \
-        libtinfo-dev \
-        zlib1g-dev && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /var/cache/*
-
+# Install ROSE
 RUN mkdir -p $ROSE_BUILD && \
     git clone -b develop https://github.com/rose-compiler/rose.git $ROSE_SRC && \
     cd $ROSE_SRC && \
