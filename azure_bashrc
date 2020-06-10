@@ -1,0 +1,27 @@
+
+# Setup BOOST environment
+export BOOST_SRC=/datadrive/wang113/boost/boost_src
+export BOOST_PATH=/datadrive/wang113/boost/boost_install
+
+# Setup LLVM environment
+export LLVM_SRC=/datadrive/wang113/llvm9/llvm_src
+export LLVM_PATH=/datadrive/wang113/llvm9/llvm_install
+export LLVM_BUILD=/datadrive/wang113/llvm9/llvm_build
+
+export PATH=$LLVM_PATH/bin:$PATH
+export LD_LIBRARY_PATH=$LLVM_PATH/libexec:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$LLVM_PATH/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=$LLVM_PATH/libexec:$LIBRARY_PATH
+export LIBRARY_PATH=$LLVM_PATH/lib:$LIBRARY_PATH
+export MANPATH=$LLVM_PATH/share/man:$MANPATH
+export C_INCLUDE_PATH=$LLVM_PATH/include:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=$LLVM_PATH/include:CPLUS_INCLUDE_PATH
+
+# Setup ROSE environment
+export ROSE_SRC=/datadrive/wang113/rose/rose_src
+export ROSE_PATH=/datadrive/wang113/rose/rose_install
+export ROSE_BUILD=/datadrive/wang113/rose/rose_build
+export PATH=$ROSE_PATH/bin:$PATH
+export LD_LIBRARY_PATH=$ROSE_PATH/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=$ROSE_PATH/lib:$LIBRARY_PATH
+
