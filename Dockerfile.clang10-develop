@@ -1,0 +1,20 @@
+
+# Environment for ROSE compiler with Clang frontend.
+
+# Pull base image.
+FROM ouankou/rose:clang10-base
+
+# Install ROSE
+RUN mkdir -p $ROSE_BUILD && \
+    git clone -b clang10 https://github.com/passlab/rose.git $ROSE_SRC && \
+    cd $ROSE_SRC && \
+    ./build && \
+    cd $ROSE_BUILD && \
+    $ROSE_SRC/configure --with-boost=$BOOST_PATH --enable-clang-frontend --enable-tests-directory --enable-languages=c,c++,fortran --prefix=$ROSE_PATH CXXFLAGS=-std=c++14 CC=clang CXX=clang++ && \
+    make core -j6 && \
+    make install-core
+
+# Username doesn't need to be defined. The host user has to be passed into Docker for correct file permissions.
+
+# Define default command.
+CMD ["bash"]

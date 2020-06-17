@@ -1,0 +1,102 @@
+
+# Environment for ROSE compiler with Clang frontend.
+
+# Pull base image.
+FROM ubuntu:18.04
+
+# Install packages.
+RUN \
+    apt-get update && \
+    apt-get install -y \
+        apt-utils \
+        dialog \
+        software-properties-common && \
+    apt-get install -y openjdk-8-jdk && \
+    apt-get install -y \ 
+        automake \
+        bison \
+        build-essential \
+        cmake \
+        curl \
+        flex \
+        g++ \
+        gcc \
+        gcc-multilib \
+        gdb \
+        gfortran \
+        ghostscript \
+        git \
+        graphviz \
+        iputils-ping \
+        libtinfo-dev \
+        libtool \
+        ninja-build \
+        python-pip \
+        util-linux \
+        vim \
+        wget \
+        zlib1g-dev && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/*
+
+# Define commonly used JAVA_HOME variable
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV LD_LIBRARY_PATH $JAVA_HOME/jre/lib/amd64/server:/usr/lib/x86_64-linux-gnu
+
+# Setup environment
+ENV ROSE_SRC /opt/rose/rose_src
+ENV ROSE_PATH /opt/rose/rose_install
+ENV ROSE_BUILD /opt/rose/rose_build
+ENV PATH $ROSE_PATH/bin:$PATH
+ENV LD_LIBRARY_PATH $ROSE_PATH/lib:$LD_LIBRARY_PATH
+ENV LIBRARY_PATH $ROSE_PATH/lib:$LIBRARY_PATH
+
+# Install LLVM
+ENV LLVM_SRC /opt/llvm/llvm_src
+ENV LLVM_PATH /opt/llvm/llvm_install
+ENV LLVM_BUILD /opt/llvm/llvm_build
+
+RUN mkdir -p $LLVM_SRC && \
+    mkdir -p $LLVM_PATH && \
+    mkdir -p $LLVM_BUILD && \
+    cd $LLVM_SRC && \
+    git clone -b release/10.x https://github.com/llvm/llvm-project . && \
+    cd $LLVM_BUILD && \
+    cmake -G Ninja -DLLVM_USE_LINKER=gold -DLLVM_ENABLE_RTTI=ON -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;openmp;libcxx;libcxxabi" $LLVM_SRC/llvm && \
+    ninja install -j6 -l6 && \
+    rm -rf $LLVM_SRC && \
+    rm -rf $LLVM_BUILD
+
+ENV PATH $LLVM_PATH/bin:$PATH
+ENV LD_LIBRARY_PATH $LLVM_PATH/libexec:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH $LLVM_PATH/lib:$LD_LIBRARY_PATH
+ENV LIBRARY_PATH $LLVM_PATH/libexec:$LIBRARY_PATH
+ENV LIBRARY_PATH $LLVM_PATH/lib:$LIBRARY_PATH
+ENV MANPATH $LLVM_PATH/share/man:$MANPATH
+ENV C_INCLUDE_PATH $LLVM_PATH/include:$C_INCLUDE_PATH
+ENV CPLUS_INCLUDE_PATH $LLVM_PATH/include:CPLUS_INCLUDE_PATH
+
+# Install Boost
+ENV BOOST_SRC /opt/boost/boost_src
+ENV BOOST_PATH /opt/boost/boost_install
+
+RUN mkdir -p $BOOST_PATH && \
+    cd $BOOST_PATH/.. && \
+    wget https://dl.bintray.com/boostorg/release/1.73.0/source/boost_1_73_0.tar.bz2 && \
+    tar --bzip2 -xf boost_1_73_0.tar.bz2 && \
+    mv boost_1_73_0 boost_src && \
+    rm boost_1_73_0.tar.bz2 && \
+    cd $BOOST_SRC && \
+    ./bootstrap.sh --with-toolset=clang --prefix=$BOOST_PATH && \
+    CC=clang CXX=clang++ ./b2 install --prefix=$BOOST_PATH && \
+    rm -rf $BOOST_SRC
+
+ENV LD_LIBRARY_PATH $BOOST_PATH/lib:$LD_LIBRARY_PATH
+
+# Define working directory.
+WORKDIR /opt/rose
+
+# Username doesn't need to be defined. The host user has to be passed into Docker for correct file permissions.
+
+# Define default command.
+CMD ["bash"]
