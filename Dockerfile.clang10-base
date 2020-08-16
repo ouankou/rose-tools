@@ -12,7 +12,7 @@ RUN \
         dialog \
         software-properties-common && \
     apt-get install -y openjdk-8-jdk && \
-    apt-get install -y \ 
+    apt-get install -y \
         automake \
         bison \
         build-essential \
