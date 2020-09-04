@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3.11
 
 
 #Initial Setup ------------------------------------------------------------------
@@ -6,9 +6,10 @@ RUN apk add --no-cache \
         autoconf \
         automake \
         bison \
-        boost-dev \
         bsd-compat-headers \
         build-base \
+        coreutils \
+        dev86 \
         flex \
         ghostscript \
         g++ \
@@ -18,9 +19,26 @@ RUN apk add --no-cache \
         libtool \
         make \
         musl-dev \
+        py3-pip \
         tar \
+        util-linux \
         vim \
         wget
+
+ENV BOOST_SRC /boost/boost_src
+ENV BOOST_PATH /boost/boost_install
+
+RUN mkdir -p $BOOST_PATH && \
+    cd $BOOST_PATH/.. && \
+    wget https://dl.bintray.com/boostorg/release/1.73.0/source/boost_1_73_0.tar.bz2 && \
+    tar --bzip2 -xf boost_1_73_0.tar.bz2 && \
+    mv boost_1_73_0 boost_src && \
+    rm boost_1_73_0.tar.bz2 && \
+    cd $BOOST_SRC && \
+    ./bootstrap.sh --prefix=$BOOST_PATH && \
+    ./b2 install --prefix=$BOOST_PATH
+    #./bootstrap.sh --with-toolset=clang --prefix=$BOOST_PATH && \
+    #CC=clang CXX=clang++ ./b2 install --prefix=$BOOST_PATH
 
 ENV ROSE_HOME /rose
 ENV NUM_PROCESSORS 8
@@ -36,7 +54,7 @@ RUN cd $ROSE_HOME/build
 RUN ${ROSE_HOME}/src/configure --prefix=${ROSE_HOME}/install \
                   --enable-languages=c,c++ \
                   --disable-tutorial-directory --disable-projects-directory \
-                  --with-boost=/usr --with-boost-libdir=/usr/lib/
+                  --with-boost=${BOOST_PATH}
 
 RUN apk add dev86
 
