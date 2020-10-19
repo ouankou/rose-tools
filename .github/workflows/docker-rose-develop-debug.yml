@@ -1,0 +1,23 @@
+name: Docker Image ROSE Develop Debug Weekly
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build the docker image of ROSE develop branch in debug mode
+      run: |
+        cd $GITHUB_WORKSPACE/freecc
+        docker build . --file Dockerfile.rose-develop-debug --tag freecc_rose_develop_debug
+        echo ${{ secrets.DOCKERHUB }} | docker login -u ${{ secrets.DOCKERHUB_ID }} --password-stdin
+        docker tag freecc_rose_develop_debug freecompilercamp/pwc:rose-develop-debug-weekly
+        docker push freecompilercamp/pwc:rose-develop-debug-weekly
+
