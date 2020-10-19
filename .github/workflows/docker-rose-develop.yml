@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Build the docker image of ROSE release branch
+    - name: Build the docker image of ROSE develop branch
       run: |
         cd $GITHUB_WORKSPACE/freecc
         docker build . --file Dockerfile.rose-develop --tag freecc_rose_develop
