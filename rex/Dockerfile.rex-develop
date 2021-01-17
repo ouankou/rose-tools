@@ -1,0 +1,45 @@
+FROM ouankou/rex:base
+
+ARG GITHUB_TOKEN
+
+# Install REX
+# Prepare installation
+ENV REX_SRC /opt/rex_src
+ENV REX_PATH /opt/rex/rex_install
+ENV REX_BUILD /opt/rex_build
+
+ENV SUBMODULE_TOKEN ${GITHUB_TOKEN}
+
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV LD_LIBRARY_PATH $JAVA_HOME/jre/lib/amd64/server:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+
+RUN mkdir -p $REX_PATH && \
+    mkdir -p $REX_BUILD && \
+    git clone -b dev https://ouankou:${SUBMODULE_TOKEN}@github.com/passlab/rexompiler.git $REX_SRC && \
+    cd $REX_SRC && \
+    git submodule init && \
+    git config --file=.gitmodules submodule."src/frontend/CxxFrontend/EDG".url "https://ouankou:${SUBMODULE_TOKEN}@github.com/passlab/EDG.git" && \
+    git config --file=.gitmodules submodule."src/frontend/SageIII/ompparser".url "https://ouankou:${SUBMODULE_TOKEN}@github.com/passlab/ompparser.git" && \ 
+    git submodule sync --recursive && \
+    git submodule update && \
+    ./build && \
+    cd $REX_BUILD && \
+    $REX_SRC/configure --prefix=$REX_PATH --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --disable-tests-directory --disable-tutorial-directory && \
+    cd $REX_BUILD && \
+    make core -j2 && \
+    make install-core && \
+    rm -rf $REX_BUILD && \
+    rm -rf $REX_SRC
+
+# Setup REX environment
+ENV PATH $REX_PATH/bin:$PATH
+ENV LD_LIBRARY_PATH $REX_PATH/lib:$LD_LIBRARY_PATH
+ENV LIBRARY_PATH $REX_PATH/lib:$LIBRARY_PATH
+ENV MANPATH $REX_PATH/share/man:$MANPATH
+RUN alias ls='ls --color=auto'
+
+FROM ouankou/rex:base
+
+COPY --from=0 $REX_PATH/* /opt/rex
+CMD ["./bash"]
+
