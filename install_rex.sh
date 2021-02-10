@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REX_ROOT=$HOME/Projects/rexdex
+REX_ROOT=$HOME/Projects/rexdev
 mkdir -p $REX_ROOT
 cd $REX_ROOT
 git clone -b dev git@github.com:passlab/rexompiler.git rex_src
