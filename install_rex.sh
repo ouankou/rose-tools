@@ -9,6 +9,6 @@ cd rex_src
 git submodule update --init
 ./build
 cd ../rex_build
-../rex_src/configure --prefix=$REX_ROOT/rex_install --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --disable-tests-directory --disable-tutorial-directory
+CC=gcc-9 CXX=g++-9 ../rex_src/configure --prefix=$REX_ROOT/rex_install --with-boost=/usr --with-boost-libdir=$BOOST_LIB --enable-languages=c,c++,fortran --disable-tests-directory --disable-tutorial-directory
 make core -j6
 make install-core
