@@ -16,7 +16,7 @@ jobs:
     - name: Build the docker image of REX develop branch
       run: |
         cd $GITHUB_WORKSPACE/rex
-        docker build --build-arg GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} --file Dockerfile.rex-develop --tag rex_develop .
+        docker build --build-arg GITHUB_TOKEN=${{ secrets.REPO_KEY }} --file Dockerfile.rex-develop --tag rex_develop .
         echo ${{ secrets.DOCKERHUB }} | docker login -u ${{ secrets.DOCKERHUB_ID }} --password-stdin
         docker tag rex_develop ouankou/rex:develop
         docker push ouankou/rex:develop
